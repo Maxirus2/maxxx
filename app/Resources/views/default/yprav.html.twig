@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Управление</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<link href="web/css/bootstrap.min.css" rel="stylesheet">
+<link href="web/css/bootstrap-responsive.min.css" rel="stylesheet">
+<link href="http://fonts.googleapis.com/css?family=Open+Sans:400italic,600italic,400,600"
+        rel="stylesheet">
+<link href="web/css/font-awesome.css" rel="stylesheet">
+<link href="web/css/style.css" rel="stylesheet">
+  <link rel="shortcut icon" href="web/img/ico.png" type="image/png">
+<link href="web/css/pages/dashboard.css" rel="stylesheet">
+	  	   <link rel="stylesheet" type="text/css" href="/web/csssystem/style.css" />
+	<script type="text/javascript" src="/web/js/modernizr.custom.39460.js"></script> 
+<!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
+<!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+<style>
+   .car{
+opacity:0.5;
+}
+  .sklad{
+opacity:0.5;
+}
+
+       .car:hover{
+         opacity:1;
+cursor: pointer;
+        }
+ .sklad:hover{
+         opacity:1;
+cursor: pointer;
+        }
+
+.car:active{
+opacity:0.9;
+}
+.sklad:active{
+opacity:0.9;
+}
+
+    </style>
+</head>
+<body id="results">
+<style>
+   hr {
+    border: none; /* Убираем границу */
+    background-color: #404040; /* Цвет линии */
+    color: #404040; /* Цвет линии для IE6-7 */
+    height: 1px; /* Толщина линии */
+	opacity: 0.5;
+   }
+  </style>
+<div class="navbar navbar-fixed-top">
+  <div class="navbar-inner">
+    <div class="container"> <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse"><span
+                    class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span> </a><a class="brand" href="/">Складская логистика | Админ панель </a>
+      <div class="nav-collapse">
+        <ul class="nav pull-right">
+         
+          <li class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown"><i
+                            class="icon-user"></i> {{login}} <b class="caret"></b></a>
+            <ul class="dropdown-menu">
+              <li><a href="?logout=1">Logout</a></li>
+            </ul>
+          </li>
+        </ul>
+     
+      </div>
+      <!--/.nav-collapse --> 
+    </div>
+    <!-- /container --> 
+  </div>
+  <!-- /navbar-inner --> 
+</div>
+<!-- /navbar -->
+<div class="subnavbar">
+  <div class="subnavbar-inner">
+    <div class="container">
+      <ul class="mainnav">
+         <li ><a href="/"><i class="icon-dashboard"></i><span>Главная</span> </a> </li>
+       {%if role !=1%} <li ><a href="/tasks"><i class="icon-list-alt"></i><span>Задания</span> </a> </li>{%endif%}
+        <li  ><a href="/sklad"><i class="icon-bar-chart"></i><span>Склад</span> </a> </li>
+		 {%if role !=1%}<li class="active" ><a href="/yprav"><i class=" icon-asterisk"></i><span>Управление</span> </a> </li>{%endif%}
+		 <li  ><a href="/transaction"><i class="icon-align-justify"></i><span>Транзакции</span> </a> </li>
+      </ul>
+    </div>
+    <!-- /container --> 
+  </div>
+  <!-- /subnavbar-inner --> 
+</div>
+<!-- /subnavbar -->
+<div class="main">
+  <div class="main-inner">
+    <div class="container">
+      <div class="row">
+        <div class="span12">
+          <div class="widget widget-nopad" >
+            <div class="widget-header" > <i  class=" icon-home"></i>
+              <h3> Внешнескладское пермещение:</h3>
+            </div>
+            <!-- /widget-header -->
+            <div class="widget-content">
+       
+		<form name="form1" method="POST" id="form1" action="/yprav">
+			<table class="table table-striped table-bordered">
+                <thead>
+                  <tr>			
+				    <th><i class="icon-file"></i> Из </th>
+                    <th><i class="icon-file"></i> Название </th>
+                    <th><i class="icon-th"></i> Цвет</th>
+                    <th><i class="icon-tag"></i> Конфигурация </th>
+				    <th><i class="icon-tag"></i> Размер </th>
+                    <th><i class="icon-tag"></i> Количество (Доступно:{{summa_result}})</th>
+					<th><i class="icon-file"></i> В </th>					
+                  </tr>
+                </thead>
+                <tbody>
+		
+				
+				
+			
+                  <tr>
+				  <td><select style="width:70px"  name="skladnameout" onchange='call();'>
+<option value=""></option>
+{%for skladss in skladss%}
+<option value="{{skladss.nameSklad}}" name="name" {%if skladss.nameSklad == nameskladvibor%}selected{%endif%}>{{skladss.nameSklad}}</option>
+{%endfor%}
+</select>
+				  </td>  
+                    <td>  
+					<select style="width:150px"  name="namesirio" onchange='call();' {%if not names_of_sirio%}disabled{%endif%}>
+					
+					
+				
+					<option value=""></option>
+				{%for names_of_sirio in names_of_sirio%}
+					<option value="{{names_of_sirio.name}}" name="name" {%if names_of_sirio.name == namesirio%}selected{%endif%}>{{names_of_sirio.name}}</option>
+			    {%endfor%}
+					
+
+ </select>
+			</td>
+                    <td> <select style="width:120px"  name="colorsirio" onchange='call();' {%if not products_namesirio2%}disabled{%endif%}>
+				    <option value=""></option>
+					{%for products_namesirio2 in products_namesirio2%}
+					<option value="{{products_namesirio2.color}}" {%if products_namesirio2.color == colorsirio%}selected{%endif%} >{{products_namesirio2.color}}</option>
+	            {%endfor%}
+				
+					</select>
+					</td>
+                    <td><select style="width:80px"  name="configsirio" onchange='call();' {%if not products_namesirio_config%}disabled{%endif%}>
+					
+					 <option value=""></option>
+				{%for products_namesirio_config in products_namesirio_config%}
+					<option value="{{products_namesirio_config.config}}" {%if products_namesirio_config.config == configsirio%}selected{%endif%} >{{products_namesirio_config.config}}</option>
+	            {%endfor%}
+
+					</select></td>
+					<td> <select style="width:80px"  name="sizesirio" onchange='call();' {%if not products_namesirio_size%}disabled{%endif%}>
+					
+							 <option value=""></option>
+				{%for products_namesirio_size in products_namesirio_size%}
+					<option value="{{products_namesirio_size.size}}" {%if products_namesirio_size.size == sizesirio%}selected{%endif%}>{{products_namesirio_size.size}}</option>
+	            {%endfor%}
+					
+					</select></td>
+					 <td> <input  name="kolichestvo" value="{{kolichestvo}}" {%if summa_result == 0%}disabled{%endif%}>  
+					 </td>
+				 <td>  <select style="width:70px"  name="skladnamein" onchange='call();' {%if not skladsin%}disabled{%endif%}>
+                <option value=""></option>
+
+{%for skladsin in skladsin%}
+					<option value="{{skladsin.nameSklad}}" {%if skladsin.nameSklad == skladsinvalue%}selected{%endif%}>{{skladsin.nameSklad}}</option>
+	            {%endfor%}
+				<option value="На производство" {%if "На производство" == skladsinvalue%}selected{%endif%} >На производство</option>
+                <option value="На продажу" {%if "На продажу" == skladsinvalue%}selected{%endif%} >На продажу</option>
+</select>
+
+</td>
+				
+                  </tr>
+				
+                
+                 
+               <input class="aaa" id="aaa" name="but" value="" style="display:none;">  
+                
+                </tbody>
+              </table>
+			  <input class="car2" id="car2" name="car2" value="" style="display:none;">  
+			  <p></p>
+			  <button class="button btn btn-success btn-large" name="buttonyes" value="Добавить задачу" style="width:100%;border-radius: 0px;" onclick="input();">Добавить задачу</button>
+			       </form>
+				  
+            </div>
+          </div>
+          <!-- /widget -->
+          
+          <!-- /widget -->
+       
+          <!-- /widget --> 
+        </div>
+		
+		   <div class="span12">
+          <div class="widget widget-table action-table">
+            <div class="widget-header"> <i class=" icon-home"></i>
+              <h3> Список поставленных задач:</h3>
+            </div>
+            <!-- /widget-header -->
+            <div class="widget-content">
+
+		  <table class="table table-striped table-bordered">
+                <thead>
+                  <tr>
+				    <th> Из </th>
+                    <th> В </th>
+                    <th> Количество </th>
+					<th> Название </th>
+					<th> Цвет </th>
+					<th> Размер </th>
+					<th> Конфигурация </th>
+				    <th> Машина </th>
+					<th></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  
+				{%for tasks_for in tasks_for%}
+				  <tr>
+				  
+				  <td>{{tasks_for.skladout}}</td>
+				  <td>{{tasks_for.skladin}}</td>
+				  <td>{{tasks_for.kol}}</td>
+				  <td>{{tasks_for.name}}</td>
+				  <td>{{tasks_for.color}}</td>
+				  <td>{{tasks_for.size}}</td>
+				  <td>{{tasks_for.config}}</td>
+				  <td>{{tasks_for.sector}}</td>
+				  <td>
+				  <center>
+				  <a href='?id={{loop.index0}}&destroy=1' class="btn btn-small btn-success" style="background-color:red; width:15px; height:15px;"><i class="icon-minus" style="position:absolute; margin-top:2px;margin-left:-3px;"> </i></a>
+				   </center>
+				  </td>
+				  </tr>
+				{%endfor%}
+                  
+                
+                 
+                
+                </tbody>
+              </table>
+			  <form method="POST" action="/yprav">
+			  <button class="button btn btn-warning btn-large" style="width:100%;border-radius: 0px;"  value="Выполнить" name="buttontask">Создать таски для выполнения</button>
+			</form>
+            </div>
+          </div>
+          <!-- /widget -->
+          
+          <!-- /widget -->
+       
+          <!-- /widget --> 
+        </div>
+        <!-- /span6 -->
+        <div class="span6">
+         
+          <!-- /widget -->
+          <div class="widget">
+            <div class="widget-header"> <i class="icon-signal"></i>
+              <h3> Склад:</h3>
+            </div>
+            <!-- /widget-header -->
+            <div class="widget-content">
+			
+{%for sklads_ware in sklads_ware%}
+		<img class="sklad" id="{{sklads_ware.nameSklad}}" onclick="profit2('{{sklads_ware.nameSklad}}'); change2('{{sklads_ware.nameSklad}}');" src="{{sklads_ware.img}}" style="height:123px; margin-left:90px;">
+{% endfor %}
+
+        <form action="{{path('yprav')}}" method="post"> 
+            <input class="sklad1" id="sklad1" name="sklad1" value="" style="display:none;">             
+            <input class="car1" id="car1" name="car1" value="" style="display:none;">  
+            
+<button class="button btn btn-success btn-large" style="width:100%" value="Приехала машина" name="button">Приехала машина на отгрузку</button>
+			 </form>
+            </div>
+            <!-- /widget-content --> 
+          </div>
+          <!-- /widget -->
+       
+          <!-- /widget --> 
+        
+          <!-- /widget -->
+        </div>
+<div class="span6">
+         
+          <!-- /widget -->
+          <div class="widget">
+            <div class="widget-header"> <i class="icon-signal"></i>
+              <h3> Сектора - машины:</h3>
+            </div>
+            <!-- /widget-header -->
+            <div class="widget-content">
+{%for carses in carses%}
+		<img class="car" id="{{carses.id}}" onclick="profit('{{carses.id}}'); change1('{{carses.id}}');" src="{{carses.img}}" style="height:100px; margin-left:30px;">
+{%endfor%}
+
+            </div>
+            <!-- /widget-content --> 
+          </div>
+          <!-- /widget -->
+       
+          <!-- /widget --> 
+        
+          <!-- /widget -->
+        </div>
+        <!-- /span6 --> 
+
+	      		
+		    </div>
+      </div>
+      <!-- /row --> 
+    </div>
+    <!-- /container --> 
+  </div>
+  <!-- /main-inner --> 
+</div>
+<!-- /main -->
+<div class="extra">
+  <div class="extra-inner">
+    <div class="container">
+      <div class="row">
+                 
+      <!-- /row --> 
+    </div>
+    <!-- /container --> 
+  </div>
+  <!-- /extra-inner --> 
+</div>
+<!-- /extra -->
+<div class="footer">
+  <div class="footer-inner">
+    <div class="container">
+      <div class="row">
+        <div class="span12"> &copy; 2018 <a href="#">Складская логистика</a>. </div>
+        <!-- /span12 --> 
+      </div>
+      <!-- /row --> 
+    </div>
+    <!-- /container --> 
+  </div>
+  <!-- /footer-inner --> 
+</div>
+<!-- /footer --> 
+<!-- Le javascript
+================================================== --> 
+<!-- Placed at the end of the document so the pages load faster --> 
+<script src="web/js/jquery-1.7.2.min.js"></script> 
+<script src="web/js/excanvas.min.js"></script> 
+<script src="web/js/chart.min.js" type="text/javascript"></script> 
+<script src="web/js/bootstrap.js"></script>
+<script language="javascript" type="text/javascript" src="web/js/full-calendar/fullcalendar.min.js"></script>
+ 
+<script src="web/js/base.js"></script> 
+
+	
+<script>     
+
+        var lineChartData = {
+            labels: ["January", "February", "March", "April", "May", "June", "July"],
+            datasets: [
+				{
+				    fillColor: "rgba(220,220,220,0.5)",
+				    strokeColor: "rgba(220,220,220,1)",
+				    pointColor: "rgba(220,220,220,1)",
+				    pointStrokeColor: "#fff",
+				    data: [76, 59, 90, 81, 56, 55, 40]
+				},
+				{
+				    fillColor: "rgba(151,187,205,0.5)",
+				    strokeColor: "rgba(151,187,205,1)",
+				    pointColor: "rgba(151,187,205,1)",
+				    pointStrokeColor: "#fff",
+				    data: [28, 48, 40, 19, 96, 27, 100]
+				}
+			]
+
+        }
+
+        var myLine = new Chart(document.getElementById("area-chart").getContext("2d")).Line(lineChartData);
+
+
+        var barChartData = {
+            labels: ["January", "February", "March", "April", "May", "June", "July"],
+            datasets: [
+				{
+				    fillColor: "rgba(220,220,220,0.5)",
+				    strokeColor: "rgba(220,220,220,1)",
+				    data: [65, 59, 90, 81, 56, 55, 40]
+				},
+				{
+				    fillColor: "rgba(151,187,205,0.5)",
+				    strokeColor: "rgba(151,187,205,1)",
+				    data: [28, 48, 40, 19, 96, 27, 100]
+				}
+			]
+
+        }    
+
+       
+    </script><!-- /Calendar -->
+
+
+{%if error!=""%}
+<div class="tn-box tn-box-color-3" style="
+ bottom:0;
+ right:0;
+ position: fixed;
+  z-index: 101; 
+ ">
+					<p>{{error}}<p>
+					<div class="tn-progress"></div>
+				</div>
+                
+
+{%endif%}
+
+{%if sucsess!=""%}
+
+              	<div class="tn-box tn-box-color-2" style="
+ bottom:0;
+ right:0;
+ position: fixed;
+  z-index: 101;
+ ">
+					<p>{{sucsess}}</</p>
+					<div class="tn-progress"></div>
+				</div>  
+
+{%endif%}
+	   <script type="text/javascript" language="javascript">
+ 	
+	function profit(i) {
+    document.getElementById('car1').value = i;
+	document.getElementById('car2').value = i;
+}
+
+function profit2(i) {
+
+    document.getElementById('sklad1').value = i;
+  
+}
+function change1(i) {
+{%for carses in carses%}
+document.getElementById('{{carses.id}}').style.opacity = "0.5";
+{%endfor%}
+
+
+var element = document.getElementById(i);
+element.style.opacity = "1";
+  
+}
+function change2(i) {
+{%for sklads_ware in sklads_ware%}
+document.getElementById('{{sklads_ware.nameSklad}}').style.opacity = "0.5";
+{%endfor%}
+var element = document.getElementById(i);
+element.style.opacity = "1";
+  
+}
+	</script>
+	
+	  <script type="text/javascript" language="javascript">
+ 	
+	function call() {
+ 	  var msg   = $('#form1').serialize();
+        $.ajax({
+          type: 'POST',
+          url: "{{path('yprav')}}",
+          data: msg,
+          success: function(data) {
+            $('#results').html(data);
+          },
+       
+        });
+ 
+    }
+	
+	function input() {
+	document.getElementById('aaa').value = 1;
+}
+	</script>
+</body>
+</html>

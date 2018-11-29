@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Склад</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<link href="web/css/bootstrap.min.css" rel="stylesheet">
+<link href="web/css/bootstrap-responsive.min.css" rel="stylesheet">
+<link href="http://fonts.googleapis.com/css?family=Open+Sans:400italic,600italic,400,600"
+        rel="stylesheet">
+<link href="web/css/font-awesome.css" rel="stylesheet">
+<link href="web/css/style.css" rel="stylesheet">
+<link href="web/css/pages/dashboard.css" rel="stylesheet">
+	  	   <link rel="stylesheet" type="text/css" href="/web/csssystem/style.css" />
+	<script type="text/javascript" src="/web/js/modernizr.custom.39460.js"></script> 
+  <link rel="shortcut icon" href="web/img/ico.png" type="image/png">
+<!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
+<!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+	<style>
+ 
+
+.yacheika {
+font-family: "Lucida Sans Unicode", "Lucida Grande", Sans-Serif;
+font-size: 14px;
+border-collapse: collapse;
+text-align: center;
+table-layout: fixed;
+}
+
+.yacheika td {
+border-style: solid;
+border-width: 0 1px 1px 0;
+width: 68px;
+height: 68px;
+border-color: white;
+}
+.yacheika td {
+background: #00FF21;
+}
+
+.yacheika td:hover {
+    opacity: 0.5;
+	cursor: default;
+}
+.record-delete{
+display: none;
+}
+table td:hover  .record-delete{
+display: block;
+cursor: pointer;
+}
+table td:hover  .record-type{
+display: none;
+}
+	</style>
+</head>
+<body id="results">
+<div class="navbar navbar-fixed-top">
+  <div class="navbar-inner">
+    <div class="container"> <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse"><span
+                    class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span> </a><a class="brand" href="/">Складская логистика | Админ панель </a>
+      <div class="nav-collapse">
+        <ul class="nav pull-right">
+          
+          <li class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown"><i
+                            class="icon-user"></i> {{login}} <b class="caret"></b></a>
+            <ul class="dropdown-menu">
+              <li><a href="?logout=1">Logout</a></li>
+            </ul>
+          </li>
+        </ul>
+      
+      </div>
+      <!--/.nav-collapse --> 
+    </div>
+    <!-- /container --> 
+  </div>
+  <!-- /navbar-inner --> 
+</div>
+<!-- /navbar -->
+<div class="subnavbar">
+  <div class="subnavbar-inner">
+    <div class="container">
+      <ul class="mainnav">
+          <li ><a href="/"><i class="icon-dashboard"></i><span>Главная</span> </a> </li>
+       {%if role !=1%} <li ><a href="/tasks"><i class="icon-list-alt"></i><span>Задания</span> </a> </li>{%endif%}
+        <li class="active" ><a href="/sklad"><i class="icon-bar-chart"></i><span>Склад</span> </a> </li>
+		 {%if role !=1%}<li  ><a href="/yprav"><i class=" icon-asterisk"></i><span>Управление</span> </a> </li>{%endif%}
+        <li   ><a href="/transaction"><i class="icon-align-justify"></i><span>Транзакции</span> </a> </li>
+		{%if role !=2 and role !=3%} <li   ><a href="/users"><i class="icon-user"></i><span>Пользователи</span> </a> </li>{%endif%}
+      </ul>
+    </div>
+    <!-- /container --> 
+  </div>
+  <!-- /subnavbar-inner --> 
+</div>
+<!-- /subnavbar -->
+<div class="main">
+  <div class="main-inner">
+    <div class="container">
+      <div class="row">
+        <div class="span6">
+          
+          <!-- /widget -->
+		   <div class="widget widget-table">
+            <div class="widget-header"> <i class="icon-tag"></i>
+              <h3> Сырье</h3>
+            </div>
+            <!-- /widget-header -->
+            <div class="widget-content">
+					<form name="form1" method="POST" id="form1" action="javascript:void(null);">
+			<table class="table table-striped table-bordered">
+                <thead>
+                  <tr>
+                    <th><i class="icon-file"></i> Название </th>
+                    <th><i class="icon-th"></i> Цвет</th>
+                    <th><i class="icon-tag"></i> Конфигурация </th>
+				    <th><i class="icon-tag"></i> Размер </th>	
+                  </tr>
+                </thead>
+                <tbody>
+		
+				
+				
+			
+                  <tr>
+                    <td>  
+					<select style="width:150px"  name="namesirio" onchange='call();'>
+					
+					
+				
+					<option value=""></option>
+				{%for names_of_sirio in names_of_sirio%}
+					<option value="{{names_of_sirio.name}}" name="name" {%if names_of_sirio.name == namesirio%}selected{%endif%}>{{names_of_sirio.name}}</option>
+			    {%endfor%}
+					
+
+ </select>
+			</td>
+                    <td> <select style="width:120px"  name="colorsirio" onchange='call();' {%if not products_namesirio2%}disabled{%endif%}>
+				    <option value=""></option>
+					{%for products_namesirio2 in products_namesirio2%}
+					<option value="{{products_namesirio2.color}}" {%if products_namesirio2.color == colorsirio%}selected{%endif%} >{{products_namesirio2.color}}</option>
+	            {%endfor%}
+				
+					</select>
+					</td>
+                    <td><select style="width:40px"  name="configsirio" onchange='call();' {%if not products_namesirio_config%}disabled{%endif%}>
+					
+					 <option value=""></option>
+				{%for products_namesirio_config in products_namesirio_config%}
+					<option value="{{products_namesirio_config.config}}" {%if products_namesirio_config.config == configsirio%}selected{%endif%} >{{products_namesirio_config.config}}</option>
+	            {%endfor%}
+
+					</select></td>
+					<td> <select style="width:80px"  name="sizesirio" {%if not products_namesirio_size%}disabled{%endif%} >
+					
+							 <option value=""></option>
+				{%for products_namesirio_size in products_namesirio_size%}
+					<option value="{{products_namesirio_size.size}}" {%if products_namesirio_size.size == sizesirio%}selected{%endif%}>{{products_namesirio_size.size}}</option>
+	            {%endfor%}
+					
+					</select></td>
+                  </tr>
+				 
+				
+                
+                 
+               <input class="aaa" id="aaa" name="but" value="" style="display:none;">  
+                
+                </tbody>
+              </table>
+			  
+			  <p></p>
+			  <button class="button btn btn-invert btn-large" name="buttonyes" value="Показать" style="width:100%;border-radius: 0px;" onclick="input(); call();">Показать</button>
+			       </form>
+            
+			
+            </div>
+            <!-- /widget-content --> 
+          </div>
+		  </div>
+		  
+		          <div class="span6">
+		 <div class="widget widget-table action-table">
+            <div class="widget-header"> <i class="icon-tags"></i>
+              <h3> Готовая продукция</h3>
+            </div>
+            <!-- /widget-header -->
+            <div class="widget-content">
+			 <form name="form2" method="POST" id="form2" action="javascript:void(null);">
+			<table class="table table-striped table-bordered">
+                <thead>
+                  <tr>
+                    <th><i class="icon-file"></i> Название </th>
+                    <th><i class="icon-th"></i> Цвет</th>
+                    <th><i class="icon-tag"></i> Конфигурация </th>
+				    <th><i class="icon-tag"></i> Размер </th>	
+                  </tr>
+                </thead>
+                <tbody>
+				
+                
+				 
+				    <tr>
+                    <td>  
+					<select style="width:150px"  name="nameprod" onchange='call2();'>
+					<option value=""></option>
+				{%for names_of_prod in names_of_prod%}
+					<option value="{{names_of_prod.name}}" name="name" {%if names_of_prod.name == nameprod%}selected{%endif%} >{{names_of_prod.name}}</option>
+			    {%endfor%}
+
+ </select>
+			</td>
+			 </td>
+                    <td> <select style="width:120px" name="colorprod" onchange='call2();' {%if not products_nameprod2%}disabled{%endif%}>
+
+					<option value=""></option>
+					{%for products_nameprod2 in products_nameprod2%}
+					<option value="{{products_nameprod2.color}}" {%if products_nameprod2.color == colorprod%}selected{%endif%} >{{products_nameprod2.color}}</option>
+	            {%endfor%}
+				
+					
+					</select>
+					</td>
+                    <td><select style="width:40px" name="configprod" onchange='call2();' {%if not products_nameprod_config%}disabled{%endif%}>
+
+						 <option value=""></option>
+				{%for products_nameprod_config in products_nameprod_config%}
+					<option value="{{products_nameprod_config.config}}" {%if products_nameprod_config.config == configprod%}selected{%endif%}>{{products_nameprod_config.config}}</option>
+	            {%endfor%}
+				
+					</select></td>
+					<td> <select style="width:80px" name="sizeprod" {%if not products_nameprod_size%}disabled{%endif%}>
+
+							 <option value=""></option>
+				{%for products_nameprod_size in products_nameprod_size%}
+					<option value="{{products_nameprod_size.size}}" {%if products_nameprod_size.size == sizeprod%}selected{%endif%}>{{products_nameprod_size.size}}</option>
+	            {%endfor%}
+					
+					</select></td>
+                  </tr>
+			
+              
+                 
+  <input class="bbb" id="bbb" name="but2" value="" style="display:none;">                 
+                
+                </tbody>
+              </table>
+			  <p></p>
+ <button class="button btn btn-invert btn-large" name="buttonyes" value="Показать" style="width:100%;border-radius: 0px;" onclick="input2(); call2();">Показать</button>
+			  
+        </form>
+            </div>
+            <!-- /widget-content --> 
+          </div>
+          
+		   
+        
+            <!-- /widget-header -->
+
+          <!-- /widget -->
+
+            <!-- /widget-content --> 
+      
+          <!-- /widget -->
+        </div>
+{% for sklad_yacheika in sklad_yacheika%} 	
+	<div class="span6">
+          <div class="widget widget-nopad">
+            <div class="widget-header"> <i class="icon-list-alt"></i>
+              <h3> Склад {{sklad_yacheika.nameSklad}}</h3>
+            </div>
+            <!-- /widget-header -->
+            <div class="widget-content">
+           <table class="yacheika">
+
+ <tr>
+   {% for yacheika in yacheika%}   
+   {%if yacheika.wherehouseId==sklad_yacheika.id%}
+ <td
+ {% set break = false %}
+
+{% for products in products if not break %}
+{%if yacheika.nameyacheika == products.nameYacheika%}
+
+{% for products_namesirio_result in products_namesirio_result %}
+{%if products_namesirio_result.nameYacheika == yacheika.nameyacheika%}   
+
+{%if products.quarty < products.countY%}style=" background: linear-gradient(to top left, yellow 70%, #00DDFF);" {%endif%}
+{%if products.quarty == products.countY%} style=" background: linear-gradient(to top left, red 70%, #00DDFF);"   {%endif%}
+
+  {%endif%}
+{%endfor%}
+{% for products_nameprod_result in products_nameprod_result %}
+{%if products_nameprod_result.nameYacheika == yacheika.nameyacheika%}   
+
+{%if products.quarty < products.countY%}style=" background: linear-gradient(to top left, yellow 70%, #00DDFF);" {%endif%}
+{%if products.quarty == products.countY%} style="background: linear-gradient(to top left, red 70%, #00DDFF);"   {%endif%}
+
+   {%endif%}
+{%endfor%}
+
+
+{%if products.quarty < products.countY%}style=" background-color:yellow;" {%endif%}
+{%if products.quarty == products.countY%} style=" background-color:red;"   {%endif%}
+
+{% set break = true %}
+{%endif%}
+{%endfor%} 
+ >
+  <a href="/yacheika/{{yacheika.nameyacheika}}" style="text-decoration:none; color:black">
+  <span class="record-type">{{yacheika.nameyacheika}}</span>
+  {% set break = false %}
+{% for products in products if not break %}
+ {%if yacheika.nameyacheika == products.nameYacheika%}<span class="record-delete">{{products.quarty}}/{{products.countY}}</span>
+ {% set break = true %}
+ {%elseif loop.index==products_kol+1%} 
+  <span class="record-delete">N/N</span>
+ {%endif%}
+{%endfor%} 
+ {%if not products%}
+<span class="record-delete">N/N</span>
+{%endif%}
+  </a>
+</td>
+
+{%if loop.index%8==0 %} </tr>   <tr>{% endif %}
+{% endif %}
+{% endfor %} 
+ 
+ </tr>
+</table>
+            </div>
+            <!-- /widget-content --> 
+          </div>
+		  </div>
+{% endfor %} 			
+
+          <!-- /widget -->
+    
+          <!-- /widget --> 
+        
+        <!-- /span6 -->
+
+        <!-- /span6 --> 
+      </div>
+      <!-- /row --> 
+    </div>
+    <!-- /container --> 
+  </div>
+  <!-- /main-inner --> 
+</div>
+<!-- /main -->
+<div class="extra">
+  <div class="extra-inner">
+    <div class="container">
+      <div class="row">
+                  
+                </div>
+      <!-- /row --> 
+    </div>
+    <!-- /container --> 
+  </div>
+  <!-- /extra-inner --> 
+</div>
+<!-- /extra -->
+<div class="footer">
+  <div class="footer-inner">
+    <div class="container">
+      <div class="row">
+        <div class="span12"> &copy; 2018 <a href="#">Складская логистика</a>. </div>
+        <!-- /span12 --> 
+      </div>
+      <!-- /row --> 
+    </div>
+    <!-- /container --> 
+  </div>
+  <!-- /footer-inner --> 
+</div>
+<!-- /footer --> 
+<!-- Le javascript
+================================================== --> 
+<!-- Placed at the end of the document so the pages load faster --> 
+<script src="web/js/jquery-1.7.2.min.js"></script> 
+<script src="web/js/excanvas.min.js"></script> 
+<script src="web/js/chart.min.js" type="text/javascript"></script> 
+<script src="web/js/bootstrap.js"></script>
+<script language="javascript" type="text/javascript" src="web/js/full-calendar/fullcalendar.min.js"></script>
+ 
+<script src="web/js/base.js"></script> 
+   <script type="text/javascript" language="javascript">
+ 	
+	function call() {
+ 	  var msg   = $('#form1').serialize();
+        $.ajax({
+          type: 'POST',
+          url: "{{path('sklad')}}",
+          data: msg,
+          success: function(data) {
+            $('#results').html(data);
+          },
+       
+        });
+ 
+    }
+	
+	function input() {
+	document.getElementById('aaa').value = 1;
+}
+	</script>
+	   <script type="text/javascript" language="javascript">
+ 	
+	function call2() {
+ 	  var msg   = $('#form2').serialize();
+        $.ajax({
+          type: 'POST',
+          url: "{{path('sklad')}}",
+          data: msg,
+          success: function(data) {
+            $('#results').html(data);
+          },
+       
+        });
+ 
+    }
+	function input2() {
+	document.getElementById('bbb').value = 1;
+}
+	</script>
+
+{%if error!=""%}
+<div class="tn-box tn-box-color-3" style="
+ bottom:0;
+ right:0;
+ position: fixed;
+  z-index: 101; 
+ ">
+					<p>{{error}}<p>
+					<div class="tn-progress"></div>
+				</div>
+                
+
+{%endif%}
+
+</body>
+</html>
